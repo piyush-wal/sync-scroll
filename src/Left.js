@@ -21,16 +21,48 @@ class Left extends React.Component {
                 "Hydinger", "Illingsworth", "Ingram", "Irwin", "Jagtap", "Jenson", "Johnson", "Johnsen", "Jones",
                 "Jurgenson", "Kalleg", "Kaskel", "Keller", "Leisinger", "LePage"]
         }
+        this.setRef = this.setRef.bind(this)
+        this.getIndex = this.getIndex.bind(this)
+        this.toggleHover = this.toggleHover.bind(this)
     }
+
+    getIndex(ref) {
+       return this.props.leftRef.findIndex(ele => ele === ref)
+    }
+    setRef(ref) {
+        if (ref !== null) {
+            this.props.setRef(ref,"leftId")
+            ref.onmouseenter = () => {
+                this.toggleHover(ref,'enter')
+            }
+            ref.onmouseleave = () => {
+                this.toggleHover(ref,'leave')
+            }
+        }
+    }
+
+    toggleHover(leftRef,key){
+        if(key === 'enter'){
+        leftRef.className='hover'
+        let index = this.getIndex(leftRef)
+        this.props.rightRef[index].className="hover"
+        }
+        else{
+            leftRef.className=''
+            let index = this.getIndex(leftRef)
+            this.props.rightRef[index].className=""
+        }
+    }
+
     render() {
         const cellStyle = { minWidth: 200, padding: '.5em 1em', textAlign: 'left', borderLeft: '1px solid white', borderBottom: '1px solid white' };
         return (
             <React.Fragment >
-                {this.state.name.map((item, key) => {
-                    return (<tr className={this.props.index === key ? 'hover' : ''} key={key} onMouseLeave={this.props.handleHoverRemove} onMouseEnter={() => this.props.handleHover(key)}>
+                { this.state.name.map((item, key) => (
+                     (<tr ref={this.setRef} key={key} >
                         <td style={cellStyle} >{item}</td>
                     </tr>)
-                })}
+                ))}
             </React.Fragment>
         );
     }

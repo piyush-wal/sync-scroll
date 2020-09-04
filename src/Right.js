@@ -21,6 +21,37 @@ class Right extends React.Component {
                 33, 20, 30, 40, 50, 60, 70, 80, 90,
                 38, 12, 34, 15, 87, 44]
         }
+        this.setRef = this.setRef.bind(this)
+        this.getIndex = this.getIndex.bind(this)
+        this.toggleHover = this.toggleHover.bind(this)
+    }
+
+    getIndex(ref) {
+        return this.props.rightRef.findIndex(ele => ele === ref)
+    }
+    setRef(ref) {
+        if (ref !== null) {
+            this.props.setRef(ref,"rightId")
+            ref.onmouseenter = () => {
+                this.toggleHover(ref,'enter')
+            }
+            ref.onmouseleave = () => {
+                this.toggleHover(ref,'leave')
+            }
+        }
+    }
+
+    toggleHover(rightRef,key){
+        if(key === 'enter'){
+        rightRef.className='hover'
+        let index = this.getIndex(rightRef)
+        this.props.leftRef[index].className="hover"
+        }
+        else{
+            rightRef.className=''
+            let index = this.getIndex(rightRef)
+            this.props.leftRef[index].className=""
+        }
     }
 
     render() {
@@ -28,7 +59,7 @@ class Right extends React.Component {
         return (
             <React.Fragment >
                 {this.state.name.map((item, key) => {
-                    return (<tr key={key} className={this.props.index === key ? 'hover' : ''} onMouseLeave={this.props.handleHoverRemove} onMouseEnter={() => this.props.handleHover(key)}>
+                    return (<tr key={key} ref={this.setRef}>
                         <td style={cellStyle}>{item}</td>
                     </tr>)
                 })}

@@ -7,7 +7,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: ''
+      index: '',
+      rightRef : [],
+      leftRef : []
     }
 
     this.leftRef = React.createRef();
@@ -15,6 +17,18 @@ class App extends React.Component {
     this.handleHover = this.handleHover.bind(this);
     this.handleHoverRemove = this.handleHoverRemove.bind(this);
     this.syncScroll = this.syncScroll.bind(this);
+    this.setRef = this.setRef.bind(this);
+  }
+
+  setRef(ref,id)
+  {
+    if(id==='leftId')
+    {
+      this.state.leftRef.push(ref)
+    }
+    else{
+      this.state.rightRef.push(ref)
+    }
   }
 
   syncScroll(id) {
@@ -45,7 +59,10 @@ class App extends React.Component {
           </thead>
 
           <tbody id="leftId" ref={this.leftRef} onScroll={() => { this.syncScroll("leftId") }} style={{ display: 'block', minWidth: 200, height: 200, overflowY: 'auto', background: 'lightblue' }}>
-            <Left index={this.state.index} handleHoverRemove={this.handleHoverRemove} handleHover={this.handleHover} />
+            <Left index={this.state.index} 
+            leftRef={this.state.leftRef}
+            rightRef={this.state.rightRef}
+            setRef={this.setRef} />
           </tbody>
 
         </table>
@@ -56,7 +73,10 @@ class App extends React.Component {
             </tr>
           </thead>
           <tbody id="rightId" ref={this.rightRef} onScroll={() => { this.syncScroll("rightId") }} style={{ display: 'block', minWidth: 200, height: 200, overflowY: 'auto', background: 'lightblue' }}>
-            <Right handleHoverRemove={this.handleHoverRemove} handleHover={this.handleHover} index={this.state.index} />
+            <Right
+            leftRef={this.state.leftRef}
+            rightRef={this.state.rightRef}
+            setRef={this.setRef} />
           </tbody>
         </table>
       </div>
